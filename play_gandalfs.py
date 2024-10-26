@@ -77,7 +77,7 @@ if __name__ == "__main__":
 				# Display the frame
 				screen.blit(frame_surface, (0, 0))
 				pygame.display.flip()
-				pygame.time.delay(25)  # Delay for frame rate
+				pygame.time.delay(33)  # Delay for frame rate
 
 		# Clean up
 		cap.release()
