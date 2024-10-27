@@ -1,6 +1,10 @@
 import pygame
 import cv2
 import socket
+try:
+	import pyautogui
+except:
+	print("Failed to import autogui")
 
 try:
 	import os
@@ -71,17 +75,6 @@ def nonblocking_catch_stop_signal(socket):
 		pass
 	return received
 
-def bring_window_to_foreground():
-    # Platform-specific code to bring the window to the foreground
-    if sys.platform.startswith('linux'):
-        # For Linux, you might need to use xdotool or a similar command
-        os.system('xdotool search --onlyvisible --class "pygame" windowactivate')
-    elif sys.platform.startswith('win'):
-        import pygetwindow as gw
-        windows = gw.getWindowsWithTitle('pygame')
-        if windows:
-            windows[0].activate()
-
 if __name__ == "__main__":
 	try:
 		add_to_startup()
@@ -115,10 +108,12 @@ if __name__ == "__main__":
 		pygame.mixer.music.load(mp3_path)  # Use the extracted audio file
 		pygame.mixer.music.play(-1)  # Loop audio
 
+		pygame.event.set_grab(True)
+		# pygame.mouse.set_visible(False)  # Optional: hide the mouse cursor
 		try:
-			bring_window_to_foreground()
+			pyautogui.click()
 		except:
-			print("failed to make foreground window")
+			print("Failed to focus with a gui hack")
 
 		exit_flag = 0
 		while True:
