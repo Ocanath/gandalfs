@@ -1,14 +1,25 @@
 import pygame
 import cv2
 import socket
+import os
+import sys
+
 try:
 	import pyautogui
 except:
 	print("Failed to import autogui")
 
+def get_data_file_path(filename):
+	if getattr(sys, 'frozen', False):
+		# If the application is running in frozen mode (e.g., as an executable)
+		base_path = sys._MEIPASS
+	else:
+		# If the application is running in a normal Python environment
+		base_path = os.path.dirname(__file__)
+	
+	return os.path.join(base_path, filename)
+
 try:
-	import os
-	import sys
 	import winreg as reg
 
 	def add_to_startup():
@@ -23,18 +34,6 @@ try:
 				reg.SetValueEx(registry_key, value_name, 0, reg.REG_SZ, exe_path)
 		except Exception as e:
 			print(f"Failed to add to startup: {e}")
-		
-
-	def get_data_file_path(filename):
-		if getattr(sys, 'frozen', False):
-			# If the application is running in frozen mode (e.g., as an executable)
-			base_path = sys._MEIPASS
-		else:
-			# If the application is running in a normal Python environment
-			base_path = os.path.dirname(__file__)
-		
-		return os.path.join(base_path, filename)
-
 except:
 	print("registry load failed")
 
