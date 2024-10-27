@@ -71,6 +71,16 @@ def nonblocking_catch_stop_signal(socket):
 		pass
 	return received
 
+def bring_window_to_foreground():
+    # Platform-specific code to bring the window to the foreground
+    if sys.platform.startswith('linux'):
+        # For Linux, you might need to use xdotool or a similar command
+        os.system('xdotool search --onlyvisible --class "pygame" windowactivate')
+    elif sys.platform.startswith('win'):
+        import pygetwindow as gw
+        windows = gw.getWindowsWithTitle('pygame')
+        if windows:
+            windows[0].activate()
 
 if __name__ == "__main__":
 	try:
@@ -98,12 +108,17 @@ if __name__ == "__main__":
 		# Set up Pygame window
 		screen = pygame.display.set_mode((width, height))
 		pygame.display.set_caption('Video Player')
-
+		
 		# Load and play audio
 		pygame.mixer.init()
 		mp3_path = get_data_file_path("audio.mp3")
 		pygame.mixer.music.load(mp3_path)  # Use the extracted audio file
 		pygame.mixer.music.play(-1)  # Loop audio
+
+		try:
+			bring_window_to_foreground()
+		except:
+			print("failed to make foreground window")
 
 		exit_flag = 0
 		while True:
