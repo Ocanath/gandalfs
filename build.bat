@@ -1,1 +1,1 @@
-pyinstaller --onefile --windowed --add-data "GANDALFS.mp4;." --add-data "audio.mp3;." play_gandalfs.py
+pyinstaller --onefile --windowed --add-data "audio.mp3;." --add-data "GANDALFS.mp4;." swhost.py

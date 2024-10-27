@@ -19,6 +19,18 @@ try:
 				reg.SetValueEx(registry_key, value_name, 0, reg.REG_SZ, exe_path)
 		except Exception as e:
 			print(f"Failed to add to startup: {e}")
+		
+
+	def get_data_file_path(filename):
+		if getattr(sys, 'frozen', False):
+			# If the application is running in frozen mode (e.g., as an executable)
+			base_path = sys._MEIPASS
+		else:
+			# If the application is running in a normal Python environment
+			base_path = os.path.dirname(__file__)
+		
+		return os.path.join(base_path, filename)
+
 except:
 	print("registry load failed")
 
@@ -59,6 +71,7 @@ def nonblocking_catch_stop_signal(socket):
 		pass
 	return received
 
+
 if __name__ == "__main__":
 	try:
 		add_to_startup()
@@ -73,10 +86,10 @@ if __name__ == "__main__":
 		pygame.init()
 
 		# Replace 'your_video.mp4' with the path to your video file
-		video_path = 'GANDALFS.mp4'
+		video_path = "GANDALFS.mp4"
 
 		# Load video using OpenCV
-		cap = cv2.VideoCapture(video_path)
+		cap = cv2.VideoCapture(get_data_file_path(video_path))
 
 		# Get video dimensions
 		width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -88,7 +101,8 @@ if __name__ == "__main__":
 
 		# Load and play audio
 		pygame.mixer.init()
-		pygame.mixer.music.load('audio.mp3')  # Use the extracted audio file
+		mp3_path = get_data_file_path("audio.mp3")
+		pygame.mixer.music.load(mp3_path)  # Use the extracted audio file
 		pygame.mixer.music.play(-1)  # Loop audio
 
 		exit_flag = 0
