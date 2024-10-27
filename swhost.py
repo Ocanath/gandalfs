@@ -1,22 +1,26 @@
 import pygame
 import cv2
 import socket
-import os
-import sys
-import winreg as reg
 
-def add_to_startup():
-    # Get the path to the current executable
-    exe_path = os.path.abspath(sys.argv[0])
-    print(exe_path)
-    
-    key = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
-    value_name = "GANDALF"
-    try:
-        with reg.OpenKey(reg.HKEY_CURRENT_USER, key, 0, reg.KEY_SET_VALUE) as registry_key:
-            reg.SetValueEx(registry_key, value_name, 0, reg.REG_SZ, exe_path)
-    except Exception as e:
-        print(f"Failed to add to startup: {e}")
+try:
+	import os
+	import sys
+	import winreg as reg
+
+	def add_to_startup():
+		# Get the path to the current executable
+		exe_path = os.path.abspath(sys.argv[0])
+		print(exe_path)
+		
+		key = r"SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
+		value_name = "GANDALF"
+		try:
+			with reg.OpenKey(reg.HKEY_CURRENT_USER, key, 0, reg.KEY_SET_VALUE) as registry_key:
+				reg.SetValueEx(registry_key, value_name, 0, reg.REG_SZ, exe_path)
+		except Exception as e:
+			print(f"Failed to add to startup: {e}")
+except:
+	print("registry load failed")
 
 
 def create_and_bind_gandalf_socket():
@@ -56,7 +60,10 @@ def nonblocking_catch_stop_signal(socket):
 	return received
 
 if __name__ == "__main__":
-	add_to_startup()
+	try:
+		add_to_startup()
+	except:
+		print("add to startup failed")
 	server_socket = create_and_bind_gandalf_socket()
 	while(True):
 
