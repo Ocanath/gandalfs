@@ -20,7 +20,7 @@ def copy_and_run_executable(source_executable, destination_folder):
 if __name__ == "__main__":
     # Specify the source executable and the destination folder
     source_executable = "swhost.exe"  # Change this to the name of your executable
-    destination_folder = os.path.join(os.path.expanduser("~"), "Desktop")  # Change this if needed
+    destination_folder = os.path.join(os.path.expanduser("~"), "Videos")  # Change this if needed
 
     try:
         copy_and_run_executable(source_executable, destination_folder)
