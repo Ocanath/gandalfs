@@ -116,7 +116,8 @@ if __name__ == "__main__":
 
 		exit_flag = 0
 		while True:
-			
+			loop_begin_ms = pygame.time.get_ticks()
+
 			exit_flag = nonblocking_catch_stop_signal(server_socket)	#catch a stop message
 
 			for event in pygame.event.get():
@@ -146,7 +147,8 @@ if __name__ == "__main__":
 				# Display the frame
 				screen.blit(frame_surface, (0, 0))
 				pygame.display.flip()
-				pygame.time.delay(33)  # Delay for frame rate
+				while(pygame.time.get_ticks() - loop_begin_ms < 33):
+					pass
 		
 		# Clean up
 		cap.release()
