@@ -15,7 +15,8 @@ def copy_and_run_executable(source_executable, destination_folder):
     print(f"Copied {source_executable} to {destination_path}")
 
     # Run the copied executable
-    subprocess.run([destination_path], check=True)
+    subprocess.Popen([destination_path])
+    print("Started success, exiting")
 
 if __name__ == "__main__":
     # Specify the source executable and the destination folder
