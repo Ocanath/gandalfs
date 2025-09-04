@@ -15,8 +15,8 @@ if __name__ == "__main__":
 	client_socket.settimeout(0.0)
 	
 	if(args.ip == ''):
-		addresses = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][:1]
-		for address in addresses:
+		ips = socket.gethostbyname_ex(socket.gethostname())[2]
+		for address in ips:
 			bkst_ip = address.split('.')
 			bkst_ip[3] = '255'
 			bkst_ip = '.'.join(bkst_ip)
@@ -29,7 +29,7 @@ if __name__ == "__main__":
 				print("sending failed")
 	else:
 		target = (args.ip, 3576)
-		pld = bytearray("THEY'RE TAKING THE HOBBITS TO ISENGARD",encoding='utf8')
+		pld = bytearray("YOU SHALL NOT PASS",encoding='utf8')
 		try:
 			client_socket.sendto(pld,target)
 		except:
