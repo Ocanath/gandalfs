@@ -7,6 +7,12 @@ import ctypes
 import ctypes.wintypes
 
 try:
+    from comtypes import CLSCTX_ALL
+    from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+except Exception:
+    print("pycaw not available, volume forcing disabled")
+
+try:
 	import pyautogui
 except:
 	print("Failed to import autogui")
@@ -79,6 +85,16 @@ def force_foreground_windows(hwnd):
 			print("Failed to focus with a gui hack")
 
 
+def set_max_volume():
+    try:
+        devices = AudioUtilities.GetSpeakers()
+        volume_interface = devices.EndpointVolume
+        volume_interface.SetMute(0, None)
+        volume_interface.SetMasterVolumeLevelScalar(1.0, None)
+    except Exception as e:
+        print(f"set_max_volume failed: {e}")
+
+
 def create_and_bind_gandalf_socket():
 	udp_server_addr = ('0.0.0.0', 3576)
 	server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -146,6 +162,7 @@ if __name__ == "__main__":
 		pygame.mixer.init()
 		mp3_path = get_data_file_path("audio.mp3")
 		pygame.mixer.music.load(mp3_path)  # Use the extracted audio file
+		set_max_volume()
 		pygame.mixer.music.play(-1)  # Loop audio
 
 		pygame.event.set_grab(True)
