@@ -1,0 +1,12 @@
+DEFAULTCHARDELAY 200
+DELAY 2000
+CTRL ALT t
+DELAY 2000
+STRING curl -o ~/gandalf.jpg "https://github.com/Ocanath/gandalfs/blob/8dac1ef820fb644d020d87a820f05a9b9b9af65d/img/gandalf.jpg?raw=true"
+ENTER
+DELAY 8000
+STRING gsettings set org.gnome.desktop.background picture-uri "file://$HOME/gandalf.jpg"
+ENTER
+DELAY 500
+STRING if [ $? -eq 0 ]; then exit; fi
+ENTER
