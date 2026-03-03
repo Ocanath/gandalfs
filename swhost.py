@@ -3,11 +3,18 @@ import cv2
 import socket
 import os
 import sys
+import ctypes
+import ctypes.wintypes
 
 try:
 	import pyautogui
 except:
 	print("Failed to import autogui")
+
+HWND_TOPMOST = -1
+SWP_NOMOVE   = 0x0002
+SWP_NOSIZE   = 0x0001
+SW_SHOW      = 5
 
 def get_data_file_path(filename):
 	if getattr(sys, 'frozen', False):
@@ -36,6 +43,40 @@ try:
 			print(f"Failed to add to startup: {e}")
 except:
 	print("registry load failed")
+
+
+def force_foreground_windows(hwnd):
+	user32 = ctypes.windll.user32
+
+	# Layer 1: HWND_TOPMOST — bypasses foreground lock entirely (Win10 + Win11)
+	try:
+		user32.SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE)
+	except Exception as e:
+		print(f"SetWindowPos failed: {e}")
+
+	# Layer 2: AttachThreadInput trick — grants keyboard focus
+	try:
+		fg_hwnd   = user32.GetForegroundWindow()
+		fg_thread = user32.GetWindowThreadProcessId(fg_hwnd, None)
+		own_thread = ctypes.windll.kernel32.GetCurrentThreadId()
+
+		if fg_thread and fg_thread != own_thread:
+			user32.AttachThreadInput(fg_thread, own_thread, True)
+
+		user32.SetForegroundWindow(hwnd)
+		user32.BringWindowToTop(hwnd)
+		user32.ShowWindow(hwnd, SW_SHOW)
+
+		if fg_thread and fg_thread != own_thread:
+			user32.AttachThreadInput(fg_thread, own_thread, False)
+
+	except Exception as e:
+		print(f"AttachThreadInput focus trick failed: {e}")
+		# Layer 3: pyautogui fallback (only if ctypes fails entirely)
+		try:
+			pyautogui.click()
+		except Exception:
+			print("Failed to focus with a gui hack")
 
 
 def create_and_bind_gandalf_socket():
@@ -108,11 +149,8 @@ if __name__ == "__main__":
 		pygame.mixer.music.play(-1)  # Loop audio
 
 		pygame.event.set_grab(True)
-		# pygame.mouse.set_visible(False)  # Optional: hide the mouse cursor
-		try:
-			pyautogui.click()
-		except:
-			print("Failed to focus with a gui hack")
+		hwnd = pygame.display.get_wm_info()['window']
+		force_foreground_windows(hwnd)
 
 		exit_flag = 0
 		while True:
